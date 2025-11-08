@@ -1,0 +1,111 @@
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+ENV/
+env/
+.venv/
+
+# 📦 Python packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 🧪 Pytest & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# 🧭 IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 🪣 Logs & temp files
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.pid
+*.seed
+*.out
+*.bak
+*.tmp
+*.temp
+.DS_Store
+
+# ⚙️ OS-specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 🐋 Docker
+*.pid
+*.seed
+*.out
+*.bak
+*.tmp
+*.temp
+Dockerfile~
+docker-compose.yml~
+.dockerignore
+
+# 📜 Environment & secrets
+.env
+.env.local
+.env.production
+.env.development
+.env.test
+*.env
+
+# 🗃️ Database & migrations (optional)
+migrations/
+alembic/
+alembic.ini
+
+# 🔥 FastAPI specific
+__pycache__/
+*.sqlite3
+*.db
+uvicorn.log
+*.pid
+
+# 🧪 Test artifacts
+*.tox/
+.tox/
+.mypy_cache/
+.pyre/
+.pytype/
+
+# 🧰 Node (if using frontend inside same repo)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
