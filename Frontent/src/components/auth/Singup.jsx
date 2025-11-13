@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { cities } from '../../data';
 import image from "../../../public/register.jpg"
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const Signup = () => {
     phone: "",
     city: "",
   });
+  const navigate  = useNavigate("/")
 
   async function formDataHandler(e)
   {
@@ -23,6 +25,7 @@ const Signup = () => {
   {
       e.preventDefault()
       console.log(formData)
+      navigate("/join-as")
     
   }
   

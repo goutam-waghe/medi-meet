@@ -10,7 +10,7 @@ const ForgotPassword = () => {
     navigate("/verify-reset-otp");
   }
   return (
-    <div className='flex justify-center items-center w-full min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4"'>
+    <div className='flex justify-center items-center w-full min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4'>
       <div className="md w-100 ">
         <div className="text-center text-white bg-blue-600 p-4">
           Forget Password

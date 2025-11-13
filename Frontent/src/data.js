@@ -96,3 +96,38 @@ export const adminData = {
     email : "admin@gmail.com" ,
     role: "admin"
 }
+
+
+
+export const categories = [
+    {
+        name:"General Medicine"
+    } , 
+     {
+        name:"Heart Surgen"
+    } ,
+     {
+        name:"Darmalogist"
+    } ,
+     {
+        name:"Neurology"
+    } ,
+
+]
+
+
+
+export const doctorSlots = [
+    {
+        startTime:"12:00 pm" ,
+        endTime:"6:00 pm" ,
+        status:"Available"  
+    } , 
+    {
+        startTime:"3:00 pm" ,
+        endTime:"6:00 pm" ,
+        status:"UnAvailable"  
+    } , 
+    
+    
+]
