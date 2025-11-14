@@ -13,17 +13,20 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     password = Column(String, nullable=False)
     city = Column(String, nullable=False)
-    phone_no = Column(String)
+    phone_number = Column(String)
     role = Column(String, default="user")
     status = Column(Boolean, default=True)
 
 
+class Doctor(Base):
+    __tablename__ = "doctors"
 
-
-class PasswordResetToken(Base):
-    __tablename__ = "password_reset_tokens"
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, index=True)
-    otp = Column(String)
-    expires_at = Column(DateTime)
-    is_used = Column(Boolean, default=False)
+    user_id = Column(Integer, ForeignKey("users.id" ,ondelete="CASCADE"), nullable=False)
+    specialization = Column(String, nullable=False)
+    experience = Column(Integer)
+    description = Column(String)
+    fees = Column(Integer)
+    certificate_pdf = Column(String)
+    status = Column(Boolean, default=True)
+    approved = Column(Boolean , default = False)
