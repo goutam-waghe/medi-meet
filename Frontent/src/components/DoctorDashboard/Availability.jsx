@@ -19,7 +19,7 @@ const Availability = () => {
           </p>
         </div>
       </div>
-      <div className="scroll-auto">
+      <div className="">
 {showForm ? (
         <CurrentAvailability showForm={showForm} setShowForm={setShowForm}/>
       ) : (

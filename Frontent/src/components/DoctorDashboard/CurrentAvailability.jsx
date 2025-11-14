@@ -1,5 +1,4 @@
 import { RiAddFill, RiDeleteBin2Fill, RiTimeLine } from '@remixicon/react'
-import React from 'react'
 import DoctorSlots from './DoctorSlots'
 import { doctorSlots } from '../../data.js'
 

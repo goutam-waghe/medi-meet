@@ -31,14 +31,19 @@ function App() {
             <Route path="/join-as" element={<Role />} />
 
             {/* user  */}
-            <Route path="/user/dashboard" element={<UserDashboard />} />
+            <Route path="/user/dashboard" element={<UserDashboard />}>
+              <Route index element={<Earning />} />
+              <Route path="earnings" element={<Earning />} />
+              <Route path="appointments" element={<Appointments />} />
+              <Route path="availability" element={<Availability />} />
+            </Route>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/join-as" element={<Role />} />
 
             {/* doctor */}
             <Route path="/doctor/dashboard" element={<DoctorDashboard />}>
               <Route index element={<Earning />} />
-              <Route path="earnings" element={<Earning/>} />
+              <Route path="earnings" element={<Earning />} />
               <Route path="appointments" element={<Appointments />} />
               <Route path="availability" element={<Availability />} />
             </Route>
