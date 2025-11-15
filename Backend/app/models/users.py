@@ -1,5 +1,5 @@
 
-from sqlalchemy import Column, Integer, String, DateTime, Enum, Boolean, ForeignKey, Float, DECIMAL, Text
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.database import Base
@@ -30,3 +30,8 @@ class Doctor(Base):
     certificate_pdf = Column(String)
     status = Column(Boolean, default=True)
     approved = Column(Boolean , default = False)
+
+
+
+
+

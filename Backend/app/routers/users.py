@@ -10,28 +10,30 @@ router = APIRouter(
     tags=["Users"],         
 )
 
-# public apis 
-# register
-@router.post("/register" , status_code=status.HTTP_201_CREATED)
-def register_user(data:UserCreate ,  db:Session = Depends(get_db)):
-    user =  get_user_by_email(db , data.email)
-    if user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    return create_user(db ,data)
-
-
-# login
-@router.post("/login"  , status_code=status.HTTP_200_OK)
-def login_user( data:UserLogin , db:Session = Depends(get_db)):
-    return authenticate_user(db, data.email  , data.password)
-    
-
-
-
 # get user profile 
-@router.get("/profile" , tatus_code=status.HTTP_200_OK)
+@router.get("/profile" , status_code=status.HTTP_200_OK)
 def user_profile(db:Session = Depends(get_db)):
     return 
+
+# get user profile 
+@router.get("/profile" , status_code=status.HTTP_200_OK)
+def user_profile(db:Session = Depends(get_db)):
+    return 
+
+# uppate user profile
+@router.get("/profile" , status_code=status.HTTP_200_OK)
+def user_profile(db:Session = Depends(get_db)):
+    return 
+
+
+# delete Account
+@router.get("/profile" , status_code=status.HTTP_200_OK)
+def delete_account(db:Session = Depends(get_db)):
+    return 
+
+# reset password
+
+
 
 
 

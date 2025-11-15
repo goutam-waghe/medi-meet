@@ -1,4 +1,5 @@
 from pydantic import BaseModel ,EmailStr 
+from typing import List
 
 class UserBase(BaseModel):
     name: str
@@ -24,3 +25,17 @@ class UserResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+# forget password
+class RequestPasswordReset(BaseModel):
+    email:EmailStr
+
+
+# verify otp
+class VerifyOTP(BaseModel):
+    otp: str
+
+# reset password
+class ResetPassword(BaseModel):
+    new_password: str
