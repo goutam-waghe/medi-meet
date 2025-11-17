@@ -15,7 +15,7 @@ router = APIRouter(
 def register_user(data:UserCreate ,  db:Session = Depends(get_db)):
     user =  get_user_by_email(db , data.email)
     if user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
     return create_user(db ,data)
 
 

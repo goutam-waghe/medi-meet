@@ -1,5 +1,5 @@
 from pydantic import BaseModel ,EmailStr 
-from typing import List
+from typing import List , Optional
 
 class UserBase(BaseModel):
     name: str
@@ -39,3 +39,11 @@ class VerifyOTP(BaseModel):
 # reset password
 class ResetPassword(BaseModel):
     new_password: str
+
+
+# update user 
+class UpdateUser(BaseModel):
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    city: Optional[str] = None
+    phone_number :Optional[str] = None

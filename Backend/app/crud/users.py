@@ -36,6 +36,7 @@ def create_user(db: Session, data: UserCreate):
 
 # login user
 def authenticate_user(db: Session, email , password ):
+    print(email , password)
     user = get_user_by_email(db ,email )
     print(user)
     if not user:
@@ -43,7 +44,7 @@ def authenticate_user(db: Session, email , password ):
     
     if not verify_password(password , user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED  , detail="Invalid email or password")
-    token = create_token({"email":user.email})
+    token = create_token({"id":user.id})
     return {
         "message":"login successfully"  ,
         "token":token
@@ -63,7 +64,7 @@ async def forgot_password_service(db  , email ):
     db.add(token)
     db.commit() 
     await send_email(email, otp)
-    token = create_token({"email":token.email})
+    token = create_token({"id":token.id})
     return {"message":"otp send to your registered email"  , "token":token}
      
 
@@ -77,7 +78,7 @@ def verify_opt_service(db , otp ,request):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="invailed Token")
     
     # matched the otp
-    storedOtp = db.query(PasswordResetToken).filter(PasswordResetToken.email == payload["email"]).first()
+    storedOtp = db.query(PasswordResetToken).filter(PasswordResetToken.id == payload["id"]).first()
 
     if (not otp == storedOtp.otp):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="invaild otp")
