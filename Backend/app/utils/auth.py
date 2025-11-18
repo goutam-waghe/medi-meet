@@ -12,15 +12,18 @@ async def isAuthenticated(request: Request , db: Session = Depends(get_db)):
         if not (header):
              raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="token not found")
         token = header.split()[1]
+        print(token)
         if not token:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="invailed Token")
         payload = verify_token(token)
         if not payload:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED , detail="invailed Token")
     
+        print(payload)
         user = db.query(User).filter(User.id == payload["id"]).first()
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="user not found")
+        print(user)
         return user
     except HTTPException:
         raise 

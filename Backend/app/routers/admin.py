@@ -67,7 +67,6 @@ def specialization(category_id:int , db:Session = Depends(get_db)):
     db.commit()
     return {
         "message":"category deleted Successfully" ,
-
     }
  
 

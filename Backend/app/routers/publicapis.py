@@ -7,6 +7,7 @@ from app.schemas.users import UserCreate , UserLogin  , RequestPasswordReset , V
 from app.schemas.doctor import DoctorDeatilsModel
 from app.models.specialization import Specialization
 from app.models.doctor import Doctor
+from app.utils.auth import isAuthenticated
 
 router = APIRouter(
     prefix="/auth",        
@@ -48,8 +49,7 @@ def verify_opt(data:VerifyOTP  , request: Request ,db:Session = Depends(get_db))
 # doctor deatils 
 
 @router.post("/doctor-details" , status_code=status.HTTP_200_OK)
-def doctor_details(request:Request , data:DoctorDeatilsModel , db:Session = Depends(get_db)):  
-    user = request.state.user 
+def doctor_details(data:DoctorDeatilsModel , db:Session = Depends(get_db) , user: User = Depends(isAuthenticated)) :  
     doctor = db.query(Doctor).filter(Doctor.user_id == user.id).first()
     if doctor:
        raise HTTPException(status_code=status.HTTP_409_CONFLICT , detail="doctor profile exits with this account") 
@@ -66,8 +66,16 @@ def doctor_details(request:Request , data:DoctorDeatilsModel , db:Session = Depe
         fees = data.fees ,
         certificate_pdf =data.certificate_pdf ,
     )
+    db.add(doctor)
+    db.commit()
+    db.refresh(user)
+    db.refresh(doctor)
+
     return {
         "message":"doctor detail succcessfully" ,
         "doctor":doctor
     }
     
+
+
+# doctor details for the chat bot 

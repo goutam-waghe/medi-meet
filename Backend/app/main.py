@@ -1,7 +1,14 @@
-from fastapi import FastAPI
+from fastapi import FastAPI , Depends
 from app.routers import users , publicapis , admin , doctor
 from app.database import Base , engine
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.models.doctor import Doctor 
+from app.models.specialization import Specialization
+from app.models.users import User
+from app.schemas.specialization import getDoctorsInfo
+from sqlalchemy.orm import Session
+from app.database import get_db
 
 app = FastAPI()
 origins = [
@@ -25,3 +32,24 @@ Base.metadata.create_all(bind=engine)
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+@app.post("/doctors-info")
+def get_doctors_info(data:getDoctorsInfo , db:Session = Depends(get_db)):
+    category = db.query(Specialization).filter(Specialization.name == data.category).first()
+
+    doctors =  (
+         db.query(User.name, Doctor.experience, Doctor.fees)
+        .join(Doctor, Doctor.user_id == User.id)
+        .filter(Doctor.specializationId == category.id)
+        .limit(3)
+        .all()
+    )
+    doctor_list = [
+        {"name": name, "experience": experience, "fees": fees}
+        for name, experience, fees in doctors
+    ]
+    print(doctors)
+
+    return {
+        "info":doctor_list
+    }
+        

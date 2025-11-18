@@ -26,12 +26,16 @@ def create_user(db: Session, data: UserCreate):
         city=data.city ,
         phone_number = data.phone_number 
     )
+
+    
     db.add(user)
     db.commit()
     db.refresh(user)
+    token = create_token({"id":user.id})
     return {
         "message":"Register succesfully"  ,
-        "user":user
+        "user":user ,
+        "token":token
     }
 
 # login user
