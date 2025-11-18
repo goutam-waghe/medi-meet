@@ -4,6 +4,9 @@ from app.models.users import User
 from app.database import get_db
 from app.crud.users import create_user , get_user_by_email , authenticate_user, forgot_password_service , reset_password_service ,verify_opt_service
 from app.schemas.users import UserCreate , UserLogin  , RequestPasswordReset , VerifyOTP , ResetPassword
+from app.schemas.doctor import DoctorDeatilsModel
+from app.models.specialization import Specialization
+from app.models.doctor import Doctor
 
 router = APIRouter(
     prefix="/auth",        
@@ -24,7 +27,7 @@ def register_user(data:UserCreate ,  db:Session = Depends(get_db)):
 def login_user( data:UserLogin , db:Session = Depends(get_db)):
     return authenticate_user(db, data.email  , data.password)
 
-# reset password
+# reset passwordSpecialization
 @router.post("/reset-password" , status_code=status.HTTP_200_OK)
 def reset_password(data:ResetPassword , request:Request , db:Session = Depends(get_db)):
     return reset_password_service(db ,data.new_password  , request)
@@ -40,3 +43,31 @@ async def forgot_password( data:  RequestPasswordReset,db:Session = Depends(get_
 @router.post("/verify-otp" , status_code=status.HTTP_200_OK)
 def verify_opt(data:VerifyOTP  , request: Request ,db:Session = Depends(get_db)):
     return verify_opt_service(db ,  data.otp , request)
+
+
+# doctor deatils 
+
+@router.post("/doctor-details" , status_code=status.HTTP_200_OK)
+def doctor_details(request:Request , data:DoctorDeatilsModel , db:Session = Depends(get_db)):  
+    user = request.state.user 
+    doctor = db.query(Doctor).filter(Doctor.user_id == user.id).first()
+    if doctor:
+       raise HTTPException(status_code=status.HTTP_409_CONFLICT , detail="doctor profile exits with this account") 
+    category = db.query(Specialization).filter(Specialization.id == data.specailization_id).first()
+    if not category:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="category not found")
+    
+    user.role = "doctor" 
+    doctor = Doctor(
+        user_id = user.id ,
+        specializationId = category.id ,
+        experience = data.experience ,
+        description = data.description,
+        fees = data.fees ,
+        certificate_pdf =data.certificate_pdf ,
+    )
+    return {
+        "message":"doctor detail succcessfully" ,
+        "doctor":doctor
+    }
+    
