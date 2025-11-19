@@ -15,4 +15,3 @@ class Doctor(Base):
     status = Column(Boolean, default=True)
     approved = Column(Boolean , default = False)
 
-

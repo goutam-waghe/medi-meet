@@ -8,3 +8,5 @@ class DoctorDeatilsModel(BaseModel):
     fees:int
     certificate_pdf:str
         
+class DoctorProfileRequest(BaseModel):
+    id : str

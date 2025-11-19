@@ -1,5 +1,5 @@
 from fastapi import FastAPI , Depends
-from app.routers import users , publicapis , admin , doctor
+from app.routers import users , publicapis , admin , doctor ,payment_route ,webhook ,review
 from app.database import Base , engine
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -26,12 +26,21 @@ app.include_router(users.router)
 app.include_router(publicapis.router)
 app.include_router(admin.router)
 app.include_router(doctor.router)
+app.include_router(payment_route.router)
+app.include_router(webhook.router)
+app.include_router(review.router)
+
+
 
 
 Base.metadata.create_all(bind=engine)
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+
+
+
 @app.post("/doctors-info")
 def get_doctors_info(data:getDoctorsInfo , db:Session = Depends(get_db)):
     category = db.query(Specialization).filter(Specialization.name == data.category).first()
