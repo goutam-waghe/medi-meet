@@ -7,6 +7,7 @@ import os
 
 from langchain_core.messages import HumanMessage
 
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -60,3 +61,74 @@ Return only the doctor category as plain text. Example: General Physician
     return category
 
 
+
+
+def detect_intent(question: str) -> str:
+    prompt = f"""
+You are an Intent Classification AI.
+Classify the user question into exactly one of the following intents:
+
+1. doctor_suggestion → User wants a doctor, specialist, clinic or appointment.
+   Example: "Suggest a doctor for skin disease", "Which doctor should I consult?"
+
+2. drug_info → User wants medication names, drugs, treatment, dosage.
+   Example: "What medicines for fever?", "Which drug is used for cough?"
+
+3. medical_question → General medical knowledge, symptoms, diseases.
+   Example: "What is diabetes?", "What are symptoms of malaria?"
+
+4. out_of_scope → Non-medical or not related.
+   Example: "Who is Ronaldo?", "Tell me a joke"
+
+Respond ONLY with one label: doctor_suggestion, drug_info, medical_question, out_of_scope
+
+User question: {question}
+
+RESPONSE FORMAT:
+Return only the intent as plain text. Example: doctor_suggestion, drug_info, medical_question, out_of_scope
+"""
+
+    response = model.generate([[HumanMessage(content=prompt)]])
+    intent_label = response.generations[0][0].text.strip()
+    return intent_label
+
+
+    
+    
+
+
+def medical_question(question: str) -> str:
+    prompt = f"""
+You are a helpful medical AI assistant. 
+
+RULES:
+1. If the user's question is related to medical knowledge, symptoms, diseases, drugs, or treatments:
+   - Answer accurately based on medical knowledge.
+   - At the end of your answer, always include this disclaimer: 
+     "Disclaimer: This information is for educational purposes only. Please consult a licensed healthcare professional before applying any advice."
+
+2. If the user's question is not related to medicine or is out-of-scope:
+   - Respond politely that you cannot provide guidance.
+   - Example: "Sorry, I can only provide information related to medical topics."
+
+Do NOT provide personal medical consultation, prescriptions, or any diagnosis.
+
+User question:
+{question}
+
+RESPONSE FORMAT:
+Return only the answer as plain text.
+"""
+
+    response = model.generate([[HumanMessage(content=prompt)]])
+    answer = response.generations[0][0].text.strip()
+    return answer
+
+
+
+
+
+
+
+
+   
