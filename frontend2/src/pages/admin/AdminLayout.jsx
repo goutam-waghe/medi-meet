@@ -10,7 +10,7 @@ import {
 } from "@remixicon/react";
 import { NavLink, Outlet } from "react-router-dom";
 
-const DoctorLayout = () => {
+const AdminLayout = () => {
   const [OpenSideBar, SetOpenSideBar] = useState(false);
   return (
     <div className="flex h-screen relative overflow-hidden">
@@ -43,14 +43,14 @@ const DoctorLayout = () => {
 
           <div className="mb-4 pb-2 border-b-1 border-gray-300">
             <p className="text-sm opacity-70">Logged in as</p>
-            <h1 className="text-xl font-bold text-blue-600">Dr. Smit</h1>
-            <div className="text-sm opacity-80 px-2 py-1 bg-green-300 rounded inline-block">doctor</div>
+            <h1 className="text-xl font-bold text-blue-600">Goutam waghe</h1>
+            <div className="text-sm opacity-80 px-2 py-1 bg-blue-300 rounded inline-block">Admin</div>
           </div>
 
           <div className="grid gap-6 text-black">
             <NavLink
             end
-            to={"/doctor-dashboard"}
+            to={"/admin-dashboard"}
               className={({ isActive }) =>
                 `p-3 rounded-md transition-all flex gap-3 items-center ${
                   isActive
@@ -64,7 +64,7 @@ const DoctorLayout = () => {
 
             <NavLink
             end
-            to={"/doctor-dashboard/appointments"}
+            to={"/admin-dashboard/doctor-requests"}
               className={({ isActive }) =>
                 `p-3 rounded-md transition-all flex gap-3 items-center ${
                   isActive
@@ -73,12 +73,12 @@ const DoctorLayout = () => {
                 }`
               }
             >
-              <RiCalendar2Line /> <span>Appointments</span>
+              <RiCalendar2Line /> <span>Request</span>
             </NavLink>
 
             <NavLink
             end
-            to={"/doctor-dashboard/availablity"}
+            to={"/admin-dashboard/appointments"}
               className={({ isActive }) =>
                 `p-3 rounded-md transition-all flex gap-3 items-center ${
                   isActive
@@ -87,12 +87,12 @@ const DoctorLayout = () => {
                 }`
               }
             >
-              <RiTimeLine /> <span>Availability</span>
+              <RiTimeLine /> <span>Appointment</span>
             </NavLink>
 
             <NavLink
             end
-            to={"/doctor-dashboard/earnings"}
+            to={"/admin-dashboard/earnings"}
               className={({ isActive }) =>
                 `p-3 rounded-md transition-all flex gap-3 items-center ${
                   isActive
@@ -106,7 +106,7 @@ const DoctorLayout = () => {
 
             <NavLink
             end
-            to={"/doctor-dashboard/profile"}
+            to={"/admin-dashboard/users"}
               className={({ isActive }) =>
                 `p-3 rounded-md transition-all flex gap-3 items-center ${
                   isActive
@@ -115,7 +115,7 @@ const DoctorLayout = () => {
                 }`
               }
             >
-              <RiProfileLine /> <span>Profile</span>
+              <RiProfileLine /> <span>Manage Users</span>
             </NavLink>
           </div>
 
@@ -133,4 +133,4 @@ const DoctorLayout = () => {
   );
 };
 
-export default DoctorLayout;
+export default AdminLayout;

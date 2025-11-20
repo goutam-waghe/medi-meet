@@ -18,6 +18,12 @@ import DoctorMyProfile from "./pages/doctor/DoctorMyProfile";
 import DoctorEarning from "./pages/doctor/DoctorEarning";
 import DoctorAppoinments from "./pages/doctor/DoctorAppoinments";
 import DoctorDashboard from "./pages/doctor/DoctorDashboard";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ManageUsers from "./pages/admin/ManageUsers";
+import PlatformEarnings from "./pages/admin/PlatformEarnings";
+import PlatformAppoiment from "./pages/admin/PlatformAppoiment";
+import DoctorRequets from "./pages/admin/DoctorRequets";
 function App() {
   return (
     <>
@@ -34,13 +40,21 @@ function App() {
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-fail" element={<PaymentFailed />} />
           <Route path="/doctor/:id" element={<DoctorProfile />} />
+          <Route path="/admin-dashboard" element={<AdminLayout/>}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<ManageUsers />} />
+            <Route path="doctor-Requests" element={<DoctorRequets />} />
+            <Route path="earnings" element={<PlatformEarnings />} />
+            <Route path="appointments" element={<PlatformAppoiment />} />
+          </Route>
+
 
           <Route path="/doctor-dashboard" element={<DoctorLayout />}>
             <Route index element={<DoctorDashboard />} />
             <Route path="availablity" element={<DoctorAvailablity />} />
             <Route path="profile" element={<DoctorMyProfile />} />
-            <Route path="earning" element={<DoctorEarning />} />
-            <Route path="appointment" element={<DoctorAppoinments />} />
+            <Route path="earnings" element={<DoctorEarning />} />
+            <Route path="appointments" element={<DoctorAppoinments />} />
           </Route>
         </Routes>
       </BrowserRouter>
