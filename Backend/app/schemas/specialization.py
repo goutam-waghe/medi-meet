@@ -6,3 +6,4 @@ class DoctorSpecialization(BaseModel):
 
 class getDoctorsInfo(BaseModel):
     category:str
+

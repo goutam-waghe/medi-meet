@@ -3,7 +3,7 @@ from model import detect_intent , medical_question
 from schemas import QueryRequest, QueryResponse
 # from graph import workflow
 from routers import ask_route 
-from routers import suggest_doctor_router
+from routers import suggest_doctor_router , durg_suggestion
 from routers .ask_route import ask
 from routers.suggest_doctor_router import suggest_doctor
 app = FastAPI(title="Medicine RAG Assistant")
@@ -12,7 +12,7 @@ app = FastAPI(title="Medicine RAG Assistant")
 
 app.include_router(ask_route.router)
 app.include_router(suggest_doctor_router.router)
-
+app.include_router(durg_suggestion.router)
 
 @app.get("")
 def helloAI():
