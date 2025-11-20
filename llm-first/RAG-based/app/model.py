@@ -127,8 +127,40 @@ Return only the answer as plain text.
 
 
 
+def drug_suggestion(context: str, question: str) -> str:
+    prompt = f"""
+You are a medical assistant AI.
+
+Your task:
+- The doctor writes ONLY the diagnosis of the patient.
+- From the provided context, list ONLY the drug names that appear in the context.
+- Do NOT add any new drugs.
+- Do NOT provide explanations, tips, warnings, or extra information.
+- If no drugs are mentioned, say "No drugs mentioned in context."
+
+CONTEXT:
+{context}
+
+QUESTION:
+{question}
+
+INSTRUCTIONS:
+1. Identify the diagnosis mentioned in the question.
+2. Extract ONLY the drug names present in the context.
+3. Respond concisely.
+
+FORMAT:
+Drugs: <comma-separated list of drugs>
+
+ANSWER:
+"""
+
+    response = model.generate([[HumanMessage(content=prompt)]])
+    return response.generations[0][0].text
 
 
 
+
+   
 
    

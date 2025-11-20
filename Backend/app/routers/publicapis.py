@@ -7,6 +7,7 @@ from app.schemas.users import UserCreate , UserLogin  , RequestPasswordReset , V
 from app.schemas.doctor import DoctorDeatilsModel ,DoctorProfileRequest
 from app.models.specialization import Specialization
 from app.models.doctor import Doctor
+from app.models.review import Review
 from app.utils.auth import isAuthenticated
 
 router = APIRouter(
@@ -81,22 +82,35 @@ def doctor_details(data:DoctorDeatilsModel , db:Session = Depends(get_db) , user
 # doctor profile 
 @router.post("/doctor_profile")
 def doctor_profile(data: DoctorProfileRequest, db: Session = Depends(get_db)):
+    # fetch doctor
     doctor_data = db.query(Doctor).filter(Doctor.id == data.id).first()
+
+    get_reviews = db.query(Review).filter(Review.doctor_id == data.id).all()
+    get_doctor_name  = db.query(User).filter(User.id == data.id).first()
+    
+        
     if not doctor_data:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Doctor not found"
         )
 
+    reviews_list = [
+        {
+            "user_id": review.user_id,
+            "rating": review.rating,
+            "comment": review.comment,
+            "created_at": review.created_at
+        }
+        for review in get_reviews
+    ]
+
     return {
-        "id": doctor_data.id,
-        "specialization": doctor_data.specialization,
+        "name ": get_doctor_name.name ,
+        "specialization": doctor_data.specializationId,
         "experience": doctor_data.experience,
         "fees": doctor_data.fees,
-        "description" : doctor_data.description
-
-      
+        "description": doctor_data.description,
+        "reviews": reviews_list  # send the list of reviews
     }
 
-    
-    

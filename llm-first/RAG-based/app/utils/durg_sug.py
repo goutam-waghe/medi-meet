@@ -1,7 +1,7 @@
 from langgraph.graph import StateGraph, END
 from pydantic import BaseModel
 from rag import retrieve_context
-from model import generate_answer , drug_suggestion
+from model import drug_suggestion
 
 class QAState(BaseModel):
     question: str
@@ -15,7 +15,7 @@ def step_rag(state: QAState):
     return state
 
 def step_llm(state: QAState):
-    state.answer = generate_answer(state.context, state.question)
+    state.answer = drug_suggestion(state.context, state.question)
     return state
 
 graph.add_node("retrieve", step_rag)
