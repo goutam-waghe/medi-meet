@@ -10,21 +10,23 @@ import {
 } from "@remixicon/react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/slice/userSlice";
+import { logout} from "../../redux/slice/userSlice.js"
 
-const DoctorLayout = () => {
-  const { user } = useSelector((state) => state.user);
+
+
+const UserLayout = () => {
+  const {user} = useSelector(state => state.user)
   const [OpenSideBar, SetOpenSideBar] = useState(false);
   const dispatch = useDispatch()
-  const naviagate = useNavigate()
-
+  const navigate = useNavigate()
   function logoutHandler()
   {
     dispatch(logout())
-    naviagate("/login")
+    navigate("/login")
   }
   return (
     <div className="flex h-screen relative overflow-hidden">
+
       {/* Sidebar */}
       <div
         className={`
@@ -32,11 +34,7 @@ const DoctorLayout = () => {
       bg-white text-black
       w-[280px] 
       transform transition-transform duration-300
-      ${
-        OpenSideBar
-          ? "translate-x-0 absolute md:relative"
-          : "-translate-x-full fixed "
-      }
+      ${OpenSideBar ? "translate-x-0 absolute md:relative" : "-translate-x-full fixed "}
     `}
       >
         {/* Toggle Button */}
@@ -52,24 +50,32 @@ const DoctorLayout = () => {
         </div>
 
         {/* Sidebar Content */}
-        <div className="p-6 text-black flex flex-col gap-1 min-h-screen ">
-          <div>
-            <div className="text-2xl font-semibold mb-2">MediMeet</div>
-            <div className="mb-4 pb-2 border-b-1 border-gray-300">
-              <p className="text-sm opacity-70">Logged in as</p>
-              <h1 className="text-xl font-bold text-blue-600">
-                Dr. {user.name}
-              </h1>
-              <div className="text-sm opacity-80 px-2 py-1 bg-green-300 rounded inline-block">
-                doctor
-              </div>
-            </div>
+        <div className="p-6 text-black ">
+          <div className="text-2xl font-semibold mb-5">MediMeet</div>
+
+          <div className="mb-4 pb-2 border-b-1 border-gray-300">
+            <p className="text-sm opacity-70">Logged in as</p>
+            <h1 className="text-xl font-bold text-blue-600">{user.name}</h1>
+            <div className="text-sm opacity-80 px-2 py-1 bg-green-300 rounded inline-block">Patient</div>
           </div>
 
-          <div className="grid gap-1 text-black">
+          <div className="grid gap-6 text-black">
             <NavLink
-              end
-              to={"/doctor-dashboard"}
+            end
+            to={"/user-dashboard"}
+              className={({ isActive }) =>
+                `p-3 rounded-md transition-all flex gap-3 items-center ${
+                  isActive
+                    ? " bg-blue-500 text-white"
+                    : "text-black hover:bg-blue-100"
+                }`
+              } 
+            >
+              <RiHome2Line /> <span>Discover doctor</span>
+            </NavLink>
+            <NavLink
+            end
+            to={"/user-dashboard/mybookings"}
               className={({ isActive }) =>
                 `p-3 rounded-md transition-all flex gap-3 items-center ${
                   isActive
@@ -78,54 +84,14 @@ const DoctorLayout = () => {
                 }`
               }
             >
-              <RiHome2Line /> <span>Dashboard</span>
+              <RiTimeLine /> <span>My Bookings</span>
             </NavLink>
 
-            <NavLink
-              end
-              to={"/doctor-dashboard/appointments"}
-              className={({ isActive }) =>
-                `p-3 rounded-md transition-all flex gap-3 items-center ${
-                  isActive
-                    ? " bg-blue-500 text-white"
-                    : "text-black hover:bg-blue-100"
-                }`
-              }
-            >
-              <RiCalendar2Line /> <span>Appointments</span>
-            </NavLink>
+           
 
             <NavLink
-              end
-              to={"/doctor-dashboard/availablity"}
-              className={({ isActive }) =>
-                `p-3 rounded-md transition-all flex gap-3 items-center ${
-                  isActive
-                    ? " bg-blue-500 text-white"
-                    : "text-black hover:bg-blue-100"
-                }`
-              }
-            >
-              <RiTimeLine /> <span>Availability</span>
-            </NavLink>
-
-            <NavLink
-              end
-              to={"/doctor-dashboard/earnings"}
-              className={({ isActive }) =>
-                `p-3 rounded-md transition-all flex gap-3 items-center ${
-                  isActive
-                    ? " bg-blue-500 text-white"
-                    : "text-black hover:bg-blue-100"
-                }`
-              }
-            >
-              <RiMoneyCnyBoxLine /> <span>Earnings</span>
-            </NavLink>
-
-            <NavLink
-              end
-              to={"/doctor-dashboard/profile"}
+            end
+            to={"/user-dashboard/profile"}
               className={({ isActive }) =>
                 `p-3 rounded-md transition-all flex gap-3 items-center ${
                   isActive
@@ -137,8 +103,9 @@ const DoctorLayout = () => {
               <RiProfileLine /> <span>Profile</span>
             </NavLink>
           </div>
-          <div className="mt-auto"> 
-            <button onClick={logoutHandler} className="text-red-500 text-center cursor-pointer w-full">Logout</button>
+
+          <div onClick={logoutHandler} className="mt-10 p-2 text-center text-red-500 cursor-pointer">
+            Logout
           </div>
         </div>
       </div>
@@ -151,4 +118,4 @@ const DoctorLayout = () => {
   );
 };
 
-export default DoctorLayout;
+export default UserLayout;

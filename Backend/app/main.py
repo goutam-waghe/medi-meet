@@ -10,6 +10,7 @@ from app.schemas.specialization import getDoctorsInfo
 from sqlalchemy.orm import Session
 from app.database import get_db
 
+
 app = FastAPI()
 origins = [
     "http://localhost:5173",  # React app origin

@@ -1,5 +1,6 @@
 from app.utils.hashPaasword import hashPassword  , verify_password
 from app.models.users import User 
+from app.models.doctor import Doctor
 from app.models.otp import PasswordResetToken
 from sqlalchemy.orm import Session
 from app.schemas.users import UserCreate   
@@ -24,6 +25,7 @@ def create_user(db: Session, data: UserCreate):
         email=data.email,
         password=hashed_password,
         city=data.city ,
+        role=data.role , 
         phone_number = data.phone_number 
     )
 
@@ -31,28 +33,34 @@ def create_user(db: Session, data: UserCreate):
     db.add(user)
     db.commit()
     db.refresh(user)
-    token = create_token({"id":user.id})
     return {
         "message":"Register succesfully"  ,
         "user":user ,
-        "token":token
     }
 
 # login user
 def authenticate_user(db: Session, email , password ):
     print(email , password)
     user = get_user_by_email(db ,email )
-    print(user)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User Not Exits")
     
     if not verify_password(password , user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED  , detail="Invalid email or password")
+    
+    
     token = create_token({"id":user.id})
-    return {
+    res  = {
         "message":"login successfully"  ,
-        "token":token
+        "token":token ,
+        "user":user ,
     }
+    if(user.role == "doctor"):
+        doctor = db.query(Doctor).filter(Doctor.user_id == user.id).first()
+        res["doctor"] = doctor
+  
+
+    return res
 
 
 # forget password 

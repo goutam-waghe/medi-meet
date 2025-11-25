@@ -5,6 +5,7 @@ class UserBase(BaseModel):
     name: str
     email: EmailStr
     city: str
+    role:str
     phone_number :str
     
 

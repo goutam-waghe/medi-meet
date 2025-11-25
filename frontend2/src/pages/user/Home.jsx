@@ -6,11 +6,17 @@ import { categories ,features } from "../../constant.js";
 import HomeCategory from "../../Components/HomeCategory.jsx";
 
 import Footer from "../../Components/Footer.jsx";
+import botImg from "../../../public/chatbot.png"
 
 const Home = () => {
   return (
     <div className="relative ">
+     
       <Header />
+       <div className="z-100 absolute bottom-10 left-10 bg-red-600">
+
+        <img className="w-10 h-10 " src={botImg} alt="" />
+      </div>
       {/* page 1 */}
       <div className="min-h-screen text-white flex pt-20 flex-col md:flex-row justify-between gap-5  px-10 items-center bg-gradient-to-r from-[#5A00FF]  to-[#2EA6FF]">
         <div className="flex h-full flex-col gap-8 w-full md:w-[50%]">

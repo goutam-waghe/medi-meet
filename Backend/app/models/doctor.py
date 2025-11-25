@@ -14,4 +14,6 @@ class Doctor(Base):
     certificate_pdf = Column(String)
     status = Column(Boolean, default=True)
     approved = Column(Boolean , default = False)
+    profile_submitted = Column(Boolean , default=False)
+    image = Column(String)
 

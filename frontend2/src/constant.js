@@ -7,7 +7,7 @@ import { RiUser2Fill } from "@remixicon/react";
 export const specializations = ["Cardiologist", "Dermatologist", "Dentist", "Neurologist", "Pediatrician", "Orthopedist"];
 
 export const cities = ["indore", "ahemdabad", "surat", "munbai", "delhi"];
-
+ 
 
 
 export const categories = [

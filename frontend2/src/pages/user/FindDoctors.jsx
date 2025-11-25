@@ -7,8 +7,7 @@ import FilterDoctor from "../../Components/FIlterDoctor.jsx";
 import { useSearchParams } from "react-router-dom";
 import {specializations , cities} from "../../constant.js"
 
-const Doctors = () => {
- const [searchParams] = useSearchParams();
+const FindDoctors = () => {
   const [selectedCity, setSelectedCity] = useState("");
   const [maxFees, setMaxFees] = useState(1000);
   const [minExperience, setMinExperience] = useState(0);
@@ -24,12 +23,10 @@ const Doctors = () => {
   };
   return (
     <>
-      {/* header */}
-      <Header />
+     
       {/* Search Feature */}
-      <div className="relative pt-25 px-10  ">
+      <div className="relative px-5">
         <div className="grid gap-3 my-8 ">
-          <div className="text-4xl font-bold">Find Our Doctors</div>
           <div className="flex border border-gray-200 px-2  items-center">
             <RiSearch2Line className="text-gray-400" />
             <input
@@ -111,7 +108,7 @@ const Doctors = () => {
                   reviewCount={value.reviews}
                   experience={value.experience}
                   imageUrl={value.image}
-                  location={value.location}
+                  location={value.city}
                   name={value.name}
                   fee={value.fees}
                   rating={value.rating}
@@ -127,4 +124,4 @@ const Doctors = () => {
   );
 };
 
-export default Doctors;
+export default FindDoctors;

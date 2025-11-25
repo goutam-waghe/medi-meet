@@ -1,6 +1,10 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
 
 const DoctorProfileCard = ({doctor}) => {
+  const path = useLocation()
+  console.log(path)
+  console.log(path.pathname == `/user-dashboard/doctor/${doctor.id}/appointment`)
   return (
 <div className="w-full bg-white shadow-md rounded-xl p-6  border-gray-300 border">
   <div className="flex flex-col md:flex-row gap-6 items-start">
@@ -41,21 +45,27 @@ const DoctorProfileCard = ({doctor}) => {
         </div>
 
         <div className="flex items-center gap-2">
-          📍 <span className="font-semibold">{doctor.location}</span>
+          📍 <span className="font-semibold">{doctor.city}</span>
         </div>
 
       </div>
+     
 
       {/* Buttons */}
-      <div className="mt-6 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+      {
+       path.pathname == `/user-dashboard/doctor/${doctor.id}/appointment`? <></>:<div className="mt-6 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
         <button className="bg-sky-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-sky-600 w-full sm:w-auto">
           Book Appointment
         </button>
 
         <button className="border px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 w-full sm:w-auto">
           Contact
-        </button>
-      </div>
+        </button></div>
+      }
+
+
+      
+      
     </div>
   </div>
 </div>

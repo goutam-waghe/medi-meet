@@ -1,6 +1,13 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Suspense, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import BackToHome from "../../Components/BackToHome";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearState,
+  fetchDoctorDetail,
+  loginUser,
+} from "../../redux/slice/userSlice";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -8,7 +15,13 @@ const Login = () => {
     password: "",
     rememberMe: false,
   });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user, error, loading, success, doctor } = useSelector(
+    (state) => state.user
+  );
 
+  console.log(user, error, loading, success);
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -19,20 +32,50 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
     // dispatch login action or API call here
+    dispatch(loginUser(formData));
   };
+
+  useEffect(() => {
+    if (error) toast.error(error?.detail);
+  }, [error]);
+
+  useEffect(() => {
+    if (success) {
+      toast.success("Login successfully!");
+
+      if (user.role === "doctor") {
+        dispatch(fetchDoctorDetail());
+      } else if (user.role === "user") {
+        navigate("/user-dashboard");
+      } else if (user.role === "admin") {
+        navigate("/admin-dashboard");
+      }
+
+      dispatch(clearState());
+    }
+  }, [success]);
+
+  useEffect(() => {
+    if (user?.role === "doctor") {
+      if (doctor) {
+        navigate("/doctor-dashboard");
+      } else if (doctor === null) {
+        navigate("/doctor-details-form");
+      }
+    }
+  }, [doctor, user]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4 relative">
-      <BackToHome/>
+      <BackToHome />
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center mb-6">
           Sign in to your account
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-         
           <div>
             <label className="text-gray-600 text-sm">Email Address</label>
             <input
@@ -46,7 +89,6 @@ const Login = () => {
             />
           </div>
 
-          
           <div>
             <label className="text-gray-600 text-sm">Password</label>
             <input
@@ -92,7 +134,10 @@ const Login = () => {
         {/* Footer */}
         <p className="text-center mt-5 text-sm text-gray-600">
           Don’t have an account?{" "}
-          <Link to={"/register" }className="text-blue-600 font-medium hover:underline">
+          <Link
+            to={"/register"}
+            className="text-blue-600 font-medium hover:underline"
+          >
             Create one
           </Link>
         </p>

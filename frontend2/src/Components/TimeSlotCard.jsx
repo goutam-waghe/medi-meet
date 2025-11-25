@@ -1,175 +1,237 @@
-import React, { useState } from "react";
+import { useState } from 'react';
 import {
-  RiAddBoxLine,
-  RiDeleteBackFill,
   RiTimeLine,
+  RiDeleteBinLine,
+  RiAddLine,
+  RiArrowDownSLine,
+  RiArrowUpSLine,
+  RiCloseLine,
 } from "@remixicon/react";
 
-const TimeSlotCard = ({ availability, setAvailability }) => {
-  const [newSlotDay, setNewSlotDay] = useState(-1);
-  const [newSlot, setNewSlot] = useState({
-    startTime: "09:00",
-    endTime: "10:00",
-  });
+export default function TimeSlotCard({ schedule, setSchedule }) {
 
-  // Toggle ON/OFF
-  const handleToggleDay = (dayIndex) => {
-    const updated = [...availability];
-    updated[dayIndex].available = !updated[dayIndex].available;
-    setAvailability(updated);
+  const days = schedule.map(s => s.day);
+
+  const [newSlot, setNewSlot] = useState(
+    days.reduce((acc, day) => ({ ...acc, [day]: { start: '09:00', end: '10:00' } }), {})
+  );
+
+  const [addingSlot, setAddingSlot] = useState(
+    days.reduce((acc, day) => ({ ...acc, [day]: false }), {})
+  );
+
+  const toggleAvailable = (dayIndex) => {
+    setSchedule(prev => prev.map((d, i) =>
+      i === dayIndex ? { ...d, available: !d.available } : d
+    ));
   };
 
-  // Update Time Slot
-  const handleUpdateSlot = (dayIndex, slotId, field, value) => {
-    const updated = [...availability];
-    updated[dayIndex].slots = updated[dayIndex].slots.map((slot) =>
-      slot.id === slotId ? { ...slot, [field]: value } : slot
-    );
-    setAvailability(updated);
+  const toggleExpand = (dayIndex) => {
+    setSchedule(prev => prev.map((d, i) =>
+      i === dayIndex ? { ...d, expanded: !d.expanded } : d
+    ));
   };
 
-  // Delete Slot
-  const handleDeleteSlot = (dayIndex, slotId) => {
-    const updated = [...availability];
-    updated[dayIndex].slots = updated[dayIndex].slots.filter(
-      (slot) => slot.id !== slotId
-    );
-    setAvailability(updated);
+  const showAddSlot = (day) => {
+    setAddingSlot(prev => ({ ...prev, [day]: true }));
   };
 
-  // Add Slot
-  const handleAddSlot = (dayIndex) => {
-    const updated = [...availability];
-    updated[dayIndex].slots.push({
-      id: Date.now(),
-      startTime: newSlot.startTime,
-      endTime: newSlot.endTime,
-    });
-    setAvailability(updated);
+  const hideAddSlot = (day) => {
+    setAddingSlot(prev => ({ ...prev, [day]: false }));
+    setNewSlot(prev => ({ ...prev, [day]: { start: '09:00', end: '10:00' } }));
+  };
 
-    // Reset add form
-    setNewSlot({ startTime: "09:00", endTime: "10:00" });
+  const addSlot = (dayIndex) => {
+    const day = schedule[dayIndex];
+    const slot = newSlot[day.day];
+
+    if (slot.start && slot.end && slot.start < slot.end) {
+      setSchedule(prev => prev.map((d, i) =>
+        i === dayIndex
+          ? { ...d, slots: [...d.slots, { id: Date.now(), start: slot.start, end: slot.end }] }
+          : d
+      ));
+      hideAddSlot(day.day);
+    }
+  };
+
+  const removeSlot = (dayIndex, slotId) => {
+    setSchedule(prev => prev.map((d, i) =>
+      i === dayIndex
+        ? { ...d, slots: d.slots.filter(s => s.id !== slotId) }
+        : d
+    ));
+  };
+
+  const updateSlot = (dayIndex, slotId, field, value) => {
+    setSchedule(prev => prev.map((d, i) =>
+      i === dayIndex
+        ? {
+            ...d,
+            slots: d.slots.map(s =>
+              s.id === slotId ? { ...s, [field]: value } : s
+            )
+          }
+        : d
+    ));
+  };
+
+  const updateNewSlot = (day, field, value) => {
+    setNewSlot(prev => ({ ...prev, [day]: { ...prev[day], [field]: value } }));
   };
 
   return (
-    <div className="bg-white rounded-xl p-6 border border-gray-200">
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">
-        Weekly Schedule
-      </h2>
+    <div className="p-6">
+      <div className="space-y-5">
 
-      <div className="space-y-6">
-        {availability.map((day, dayIndex) => (
-          <div key={day.day} className="border border-gray-200 rounded-lg p-6">
-            {/* Day Header */}
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {day.day}
-              </h3>
+        {schedule.map((dayData, dayIndex) => (
+          <div
+            key={dayData.day}
+            className="rounded-xl border border-gray-300 bg-white shadow-sm overflow-hidden"
+          >
 
-              <label className="flex items-center gap-2 cursor-pointer">
+            {/* Header */}
+            <div
+              className="flex items-center justify-between p-4 cursor-pointer border-b border-gray-200"
+              onClick={() => toggleExpand(dayIndex)}
+            >
+              <div className="flex items-center gap-3">
+                {dayData.expanded ? (
+                  <RiArrowUpSLine size={20} />
+                ) : (
+                  <RiArrowDownSLine size={20} />
+                )}
+
+                <h2 className="text-lg font-semibold">{dayData.day}</h2>
+                <span className="text-gray-500 text-sm">
+                  ({dayData.slots.length} slots)
+                </span>
+              </div>
+
+              <label
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <input
                   type="checkbox"
-                  checked={day.available}
-                  onChange={() => handleToggleDay(dayIndex)}
-                  className="w-4 h-4 accent-blue-500 rounded"
+                  checked={dayData.available}
+                  onChange={() => toggleAvailable(dayIndex)}
+                  className="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
                 />
-                <span className="text-sm font-medium text-gray-700">
-                  {day.available ? "Available" : "Off"}
-                </span>
+                <span className="text-sm text-gray-600">Available</span>
               </label>
             </div>
 
-            {/* Slots */}
-            {day.available && (
-              <div className="space-y-4">
-                {day.slots.map((slot) => (
+            {/* Slots Visible */}
+            {dayData.expanded && dayData.available && (
+              <div className="px-4 pb-4 space-y-3">
+
+                {dayData.slots.map((slot) => (
                   <div
                     key={slot.id}
-                    className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg"
+                    className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200"
                   >
-                    <RiTimeLine size={18} className="text-blue-600" />
 
-                    <div className="flex-1 flex items-center gap-2">
-                      <input
-                        type="time"
-                        value={slot.startTime}
-                        onChange={(e) =>
-                          handleUpdateSlot(dayIndex, slot.id, "startTime", e.target.value)
-                        }
-                        className="border p-1 w-24 rounded"
-                      />
-                      <span className="text-gray-600">to</span>
-                      <input
-                        type="time"
-                        value={slot.endTime}
-                        onChange={(e) =>
-                          handleUpdateSlot(dayIndex, slot.id, "endTime", e.target.value)
-                        }
-                        className="border p-1 w-24 rounded"
-                      />
-                    </div>
+                    <RiTimeLine size={18} className="text-emerald-500" />
+
+                    <input
+                      type="time"
+                      value={slot.start}
+                      onChange={(e) =>
+                        updateSlot(dayIndex, slot.id, 'start', e.target.value)
+                      }
+                      className="border border-gray-300 rounded-lg px-3 py-2"
+                    />
+
+                    <span className="text-gray-500">to</span>
+
+                    <input
+                      type="time"
+                      value={slot.end}
+                      onChange={(e) =>
+                        updateSlot(dayIndex, slot.id, 'end', e.target.value)
+                      }
+                      className="border border-gray-300 rounded-lg px-3 py-2"
+                    />
 
                     <button
-                      onClick={() => handleDeleteSlot(dayIndex, slot.id)}
-                      className="p-2 rounded text-red-600 hover:bg-red-50"
+                      onClick={() => removeSlot(dayIndex, slot.id)}
+                      className="ml-auto p-2 text-red-500 hover:bg-red-100 rounded-lg"
                     >
-                      <RiDeleteBackFill size={16} />
+                      <RiDeleteBinLine size={18} />
                     </button>
+
                   </div>
                 ))}
 
-                {/* Add slot input */}
-                {dayIndex === newSlotDay && (
-                  <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <div className="flex-1 flex items-center gap-2">
-                      <input
-                        type="time"
-                        value={newSlot.startTime}
-                        onChange={(e) =>
-                          setNewSlot({ ...newSlot, startTime: e.target.value })
-                        }
-                        className="border p-1 w-24 rounded"
-                      />
-                      <span className="text-gray-600">to</span>
-                      <input
-                        type="time"
-                        value={newSlot.endTime}
-                        onChange={(e) =>
-                          setNewSlot({ ...newSlot, endTime: e.target.value })
-                        }
-                        className="border p-1 w-24 rounded"
-                      />
-                    </div>
-
-                    <button
-                      className="px-3 py-1 bg-blue-600 text-white rounded"
-                      onClick={() => {
-                        handleAddSlot(dayIndex);
-                        setNewSlotDay(-1);
-                      }}
-                    >
-                      Add
-                    </button>
-                  </div>
-                )}
-
-                {/* Add slot button */}
-                {dayIndex !== newSlotDay && (
+                {/* Add Slot Button */}
+                {!addingSlot[dayData.day] && (
                   <button
-                    className="w-full flex items-center justify-center gap-2 border border-blue-500 text-blue-600 py-2 rounded hover:bg-blue-50"
-                    onClick={() => setNewSlotDay(dayIndex)}
+                    onClick={() => showAddSlot(dayData.day)}
+                    className="w-full py-3 border-2 border-dashed border text-blue-600 rounded-lg flex items-center justify-center gap-2 hover:bg-emerald-50"
                   >
-                    <RiAddBoxLine size={18} />
+                    <RiAddLine size={18} />
                     Add Time Slot
                   </button>
                 )}
+
+                {/* Add Slot Input */}
+                {addingSlot[dayData.day] && (
+                  <div className="flex items-center gap-3 bg-emerald-50 p-3 rounded-lg border border-emerald-300">
+
+                    <RiTimeLine size={18} className="text-emerald-600" />
+
+                    <input
+                      type="time"
+                      value={newSlot[dayData.day].start}
+                      onChange={(e) =>
+                        updateNewSlot(dayData.day, 'start', e.target.value)
+                      }
+                      className="border border-gray-300 rounded-lg px-3 py-2"
+                    />
+
+                    <span className="text-gray-600">to</span>
+
+                    <input
+                      type="time"
+                      value={newSlot[dayData.day].end}
+                      onChange={(e) =>
+                        updateNewSlot(dayData.day, 'end', e.target.value)
+                      }
+                      className="border border-gray-300 rounded-lg px-3 py-2"
+                    />
+
+                    <button
+                      onClick={() => addSlot(dayIndex)}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                      Add
+                    </button>
+
+                    <button
+                      onClick={() => hideAddSlot(dayData.day)}
+                      className="p-2 text-gray-500 hover:bg-gray-200 rounded-lg"
+                    >
+                      <RiCloseLine size={18} />
+                    </button>
+
+                  </div>
+                )}
+
               </div>
             )}
+
+            {/* If unavailable */}
+            {dayData.expanded && !dayData.available && (
+              <div className="px-4 pb-4">
+                <p className="text-gray-500 italic">Not available on this day</p>
+              </div>
+            )}
+
           </div>
         ))}
+
       </div>
     </div>
   );
-};
-
-export default TimeSlotCard;
+}

@@ -1,9 +1,9 @@
 import React from 'react'
-import { RiStarFill  , RiMap2Fill} from '@remixicon/react'
-import { Link } from 'react-router-dom'
+import { RiStarFill  , RiMap2Fill, RiSortAlphabetAsc} from '@remixicon/react'
+import { Link, useLocation } from 'react-router-dom'
 
 const DoctorCard = ({
-    name, 
+  name, 
   specialization, 
   experience, 
   fee, 
@@ -11,7 +11,10 @@ const DoctorCard = ({
   reviewCount, 
   location, 
   imageUrl 
+  , id
 }) => {
+  const path = useLocation();
+
   return (
    <div className="flex gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
       <div className="flex-shrink-0">
@@ -51,12 +54,35 @@ const DoctorCard = ({
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          <Link to={"/doctor/prfile"} className="flex-1 px-6 py-2.5 border-2 border-cyan-500 text-cyan-500 rounded-lg font-medium hover:bg-cyan-50 transition-colors">
+          {
+          // console.log(path.pathname == "/doctors" )
+            
+           path.pathname == "/doctors" ?<>
+           <Link to={`/doctor/${id}/profile`} className="flex-1 px-6 py-2.5 border-2 border-cyan-500 text-cyan-500 rounded-lg font-medium hover:bg-cyan-50 transition-colors">
             View Profile
           </Link>
-          <button className="flex-1 px-6 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-600 transition-colors">
+          <Link to={`/user-dashboard/doctor/${id}/appointment`} className="flex-1 px-6 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-600 transition-colors">
             Book Appointment
-          </button>
+          </Link> 
+
+           </> 
+          :
+          <>
+          <Link to={`/user-dashboard/doctor/${id}/profile`} className="flex-1 px-6 py-2.5 border-2 border-cyan-500 text-cyan-500 rounded-lg font-medium hover:bg-cyan-50 transition-colors">
+            View Profile
+          </Link>
+
+          <Link to={`/user-dashboard/doctor/${id}/appointment`} className="flex-1 px-6 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-600 transition-colors">
+            Book Appointment
+          </Link> 
+          </>
+          
+            
+          }
+          
+          {/* <Link to={`doctor/${id}/appoinement`} className="flex-1 px-6 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-600 transition-colors">
+            Book Appointment
+          </Link> */}
         </div>
       </div>
     </div>

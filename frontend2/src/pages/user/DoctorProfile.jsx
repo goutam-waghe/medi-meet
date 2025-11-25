@@ -1,40 +1,45 @@
 import React from "react";
 import { RiArrowLeftLine } from "@remixicon/react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import DoctorProfileCard from "../../Components/DoctorProfileCard";
+import { allDoctors } from "../../constant";
 
-const doctor = {
-  name: "Dr. Michael Chen",
-  specialization: "Dermatologist",
-  rating: 4.7,
-  reviews: 128,
-  experience: 8,
-  fees: 400,
-  location: "Delhi",
 
-  experienceTitle1: "Dermatologist Practice",
-  experienceYears: 8,
+// const doctor = {
+//   name: "Dr. Michael Chen",
+//   specialization: "Dermatologist",
+//   rating: 4.7,
+//   reviews: 128,
+//   experience: 8, 
+//   fees: 400,
+//   location: "Delhi",
 
-  experienceTitle2: "Skin & Hair Specialist",
-  experienceDetails:
-    "Experienced in treating acne, scars, pigmentation, and cosmetic procedures.",
-  image:
-    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+//   experienceTitle1: "Dermatologist Practice",
+//   experienceYears: 8,
 
-  about:
-    "Dr. Michael is a highly experienced Dermatologist with 8 years of medical practice. Dedicated to providing excellent healthcare services with a patient-centric approach.",
+//   experienceTitle2: "Skin & Hair Specialist",
+//   experienceDetails:
+//     "Experienced in treating acne, scars, pigmentation, and cosmetic procedures.",
+//   image:
+//     "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
 
-  qualification1: {
-    title: "Dermatologist Specialization",
-    subTitle: "Board certified in Dermatology",
-  },
-  qualification2: {
-    title: "Medical Degree",
-    subTitle: "MD from recognized institution",
-  },
-};
+//   about:
+//     "Dr. Michael is a highly experienced Dermatologist with 8 years of medical practice. Dedicated to providing excellent healthcare services with a patient-centric approach.",
+
+//   qualification1: {
+//     title: "Dermatologist Specialization",
+//     subTitle: "Board certified in Dermatology",
+//   },
+//   qualification2: {
+//     title: "Medical Degree",
+//     subTitle: "MD from recognized institution",
+//   },
+// };
 
 const DoctorProfile = () => {
+   const { id } = useParams(); 
+   const doctor = allDoctors.find((val ) => val.id === Number(id))
+   
   return (
     <div className="px-5 md:px-12 lg:px-20 my-10 flex flex-col gap-6">
       {/* Back Button */}
@@ -46,16 +51,16 @@ const DoctorProfile = () => {
       </Link>
 
       {/* Profile Card */}
-      <DoctorProfileCard doctor={doctor} />
+      <DoctorProfileCard doctor={doctor}  />
 
       {/* ABOUT SECTION */}
       <div className="bg-white shadow-sm  border-gray-300 border rounded-xl p-6 transition hover:shadow-md">
         <h3 className="text-2xl font-bold mb-3">About</h3>
-        <p className="text-gray-700 leading-7">{doctor.about}</p>
+        <p className="text-gray-700 leading-7">Dr. {doctor.name} is an experienced {doctor.specialization} known for providing personalized and compassionate care. With over {doctor.experience} years in the field, the doctor has helped thousands of patients with accurate diagnosis and effective treatment plans.</p>
       </div>
 
       {/* EXPERIENCE SECTION */}
-      <div className="bg-white shadow-sm  border-gray-300 border rounded-xl p-6 transition hover:shadow-md">
+      {/* <div className="bg-white shadow-sm  border-gray-300 border rounded-xl p-6 transition hover:shadow-md">
         <h3 className="text-2xl font-bold mb-4">Experience</h3>
 
         <div className="space-y-5">
@@ -71,7 +76,7 @@ const DoctorProfile = () => {
             <p className="text-gray-600 text-sm">{doctor.experienceDetails}</p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* SERVICES SECTION */}
       <div className="bg-white shadow-sm   border-gray-300 border rounded-xl p-6 transition hover:shadow-md">

@@ -4,11 +4,11 @@ from app.models.users import User
 from app.database import get_db
 from app.crud.users import create_user , get_user_by_email , authenticate_user, forgot_password_service , reset_password_service ,verify_opt_service
 from app.schemas.users import UserCreate , UserLogin  , RequestPasswordReset , VerifyOTP , ResetPassword
-from app.schemas.doctor import DoctorDeatilsModel ,DoctorProfileRequest
-from app.models.specialization import Specialization
+from app.schemas.doctor import DoctorProfileRequest
 from app.models.doctor import Doctor
 from app.models.review import Review
-from app.utils.auth import isAuthenticated
+from app.models.specialization import Specialization
+
 
 router = APIRouter(
     prefix="/auth",        
@@ -47,36 +47,18 @@ def verify_opt(data:VerifyOTP  , request: Request ,db:Session = Depends(get_db))
     return verify_opt_service(db ,  data.otp , request)
 
 
+# get all doctors 
+@router.get("/doctors" , status_code=status.HTTP_200_OK)
+def get_all_doctors(db:Session = Depends(get_db)):
+    doctors = db.query(User).filter(User.role == "doctor").all()
+    return {
+        "doctors":doctors
+    }
+
+
+
 # doctor deatils 
 
-@router.post("/doctor-details" , status_code=status.HTTP_200_OK)
-def doctor_details(data:DoctorDeatilsModel , db:Session = Depends(get_db) , user: User = Depends(isAuthenticated)) :  
-    doctor = db.query(Doctor).filter(Doctor.user_id == user.id).first()
-    if doctor:
-       raise HTTPException(status_code=status.HTTP_409_CONFLICT , detail="doctor profile exits with this account") 
-    category = db.query(Specialization).filter(Specialization.id == data.specailization_id).first()
-    if not category:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="category not found")
-    
-    user.role = "doctor" 
-    doctor = Doctor(
-        user_id = user.id ,
-        specializationId = category.id ,
-        experience = data.experience ,
-        description = data.description,
-        fees = data.fees ,
-        certificate_pdf =data.certificate_pdf ,
-    )
-    db.add(doctor)
-    db.commit()
-    db.refresh(user)
-    db.refresh(doctor)
-
-    return {
-        "message":"doctor detail succcessfully" ,
-        "doctor":doctor
-    }
-    
 
 
 # doctor profile 
@@ -113,4 +95,16 @@ def doctor_profile(data: DoctorProfileRequest, db: Session = Depends(get_db)):
         "description": doctor_data.description,
         "reviews": reviews_list  # send the list of reviews
     }
+
+
+# get all categories 
+
+@router.get("/get-all-categories" , status_code=status.HTTP_200_OK)
+def specialization( db:Session = Depends(get_db)):
+    categories = db.query(Specialization).all()
+    return {
+        "message":"category created Successfully" ,
+        "category":categories
+    }
+ 
 

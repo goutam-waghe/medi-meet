@@ -1,66 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react';
 import TimeSlotCard from '../../Components/TimeSlotCard.jsx';
 
-const demoAvailability = [
-  {
-    day: "Monday",
-    available: true,
-    slots: [
-      { id: "1", startTime: "09:00", endTime: "12:00" },
-      { id: "2", startTime: "14:00", endTime: "17:00" }
-    ]
-  },
-  {
-    day: "Tuesday",
-    available: true,
-    slots: [
-      { id: "1", startTime: "10:00", endTime: "13:00" },
-      { id: "2", startTime: "15:00", endTime: "18:00" }
-    ]
-  },
-  {
-    day: "Wednesday",
-    available: true,
-    slots: [
-      { id: "1", startTime: "09:30", endTime: "12:30" }
-    ]
-  },
-  {
-    day: "Thursday",
-    available: true,
-    slots: [
-      { id: "1", startTime: "09:00", endTime: "11:00" },
-      { id: "2", startTime: "13:00", endTime: "16:00" }
-    ]
-  },
-  {
-    day: "Friday",
-    available: true,
-    slots: [
-      { id: "1", startTime: "10:00", endTime: "14:00" }
-    ]
-  },
-  {
-    day: "Saturday",
-    available: true,
-    slots: [
-      { id: "1", startTime: "09:00", endTime: "12:00" }
-    ]
-  },
-  {
-    day: "Sunday",
-    available: false,
-    slots: []
-  }
-];
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+const initialSchedule = days.map(day => ({
+  day,
+  available: true,
+  expanded: true,
+  slots: day === 'Tuesday' ? [{ id: 1, start: '09:00', end: '17:00' }] : []
+}));
 
 const DoctorAvailablity = () => {
-  return (
-    <div>
-      {demoAvailability.map(() => <TimeSlotCard availability={demoAvailability}/>)}
-    </div>
-  )
-}
+  const [schedule, setSchedule] = useState(initialSchedule);
 
-export default DoctorAvailablity
+  return (
+    <div className='grid gap-5 px-10 py-10'>
+      
+      {/* Page Header */}
+      <div className='grid gap-2 border-gray-200 border-b pb-2'>
+        <h1 className='text-4xl font-semibold'>Availability</h1>
+        <p className='text-md text-gray-500'>Set your working hours and appointment slots</p>
+      </div>
+
+      {/* Time Slot Section */}
+      <div className='shadow-md border-gray-200 border rounded-xl bg-gray-50'>
+        <TimeSlotCard schedule={schedule} setSchedule={setSchedule} />
+      </div>
+    </div>
+  );
+};
+
+export default DoctorAvailablity;

@@ -1,7 +1,6 @@
 from fastapi import APIRouter , Depends  , status , Request , HTTPException
 from app.models.users import User
 from app.utils.auth import isAdmin
-from app.schemas.doctor import DoctorDeatilsModel
 from app.database import get_db
 from sqlalchemy.orm import Session
 from app.models.doctor import Doctor
@@ -48,13 +47,7 @@ def specialization( category_id:int ,  data:DoctorSpecialization , db:Session = 
     }
 
 
-@router.get("/get-all-categories" , status_code=status.HTTP_200_OK)
-def specialization( db:Session = Depends(get_db)):
-    categories = db.query(Specialization).all()
-    return {
-        "message":"category created Successfully" ,
-        "category":categories
-    }
+
  
 
 

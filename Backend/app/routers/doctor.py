@@ -1,12 +1,14 @@
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException  , status , Request , UploadFile , File , Form
 from sqlalchemy.orm import Session
 from app.schemas.availability import AvailabilityCreate ,SlotCreate
 from app.utils.auth import isDoctor
 from app.database import get_db 
 from app.models.doctoravailability import Availability ,Slot
 from datetime import datetime, timedelta, date as dt_date
-
+from app.models.specialization import Specialization
+from app.models.doctor import Doctor
+import cloudinary.uploader
 
 router = APIRouter(
     prefix="/doctor",        
@@ -69,5 +71,67 @@ def delete_slot(slot_id: int, db: Session = Depends(get_db)):
 
     return {"message": "Slot deleted successfully"}
 
+# doctor details 
+@router.post("/doctor-details" , status_code=status.HTTP_200_OK)
+def doctor_details(request: Request,specialization_id: int = Form(...), experience: int = Form(...), description: str = Form(...), fees: int = Form(...),certificate_pdf: UploadFile = File(...), image:UploadFile = File(...) , db: Session = Depends(get_db)): 
+    user = request.state.user
+    doctor = db.query(Doctor).filter(Doctor.user_id == user.id).first()
+    if doctor:
+       raise HTTPException(status_code=status.HTTP_409_CONFLICT , detail="doctor profile exits with this account") 
+    category = db.query(Specialization).filter(Specialization.id == specialization_id).first()
+    if not category:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail="category not found")
+
+    # pdf updaload
+    upload_result = cloudinary.uploader.upload(
+        certificate_pdf.file,
+        resource_type="raw",   # RAW for PDF
+        folder="doctor_certificates"
+    )
+    pdf_url = upload_result.get("secure_url")
+
+   # image velidation
+    if image.content_type not in ["image/jpeg", "image/png"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Only JPEG or PNG images allowed."
+        )
+    # image uplaod
+    upload_result =  cloudinary.uploader.upload(
+        image.file,
+        folder="doctor_images",
+        # public_id=name,     # optional
+        resource_type="image"
+    )
+    image_url =  upload_result.get("secure_url")
+
+    doctor = Doctor(
+        user_id = user.id ,
+        specializationId = category.id ,
+        experience = experience ,
+        description = description,
+        fees = fees ,
+        certificate_pdf =pdf_url ,
+        image = image_url
+    )
+    doctor.profile_submitted = True
+    db.add(doctor)
+    db.commit()
+    db.refresh(doctor)
+
+    return {
+        "message":"doctor detail succcessfully saved" ,
+        "doctor":doctor
+    }
+    
 
 
+# get all categories
+
+@router.get("/doctor-me")
+def get_doctor_exits(request :Request , db:Session =Depends(get_db)):
+    user = request.state.user
+    doctor = db.query(Doctor).filter(Doctor.user_id == user.id).first()
+    return {
+        "doctor":doctor
+    }
